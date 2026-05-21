@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Icon } from '@iconify/react'
 
 export default function Certifications() {
   const [activeTab, setActiveTab] = useState('Frontend')
   const [selectedCert, setSelectedCert] = useState(null)
+  const [isDecrypting, setIsDecrypting] = useState(false)
   
   const pixelStyle = { fontFamily: '"Press Start 2P", cursive' };
   
@@ -41,6 +42,16 @@ export default function Certifications() {
 
   const tabs = ["Frontend", "Networking", "Design", "Language", "Others"];
   const filteredCerts = certs.filter(cert => cert.category === activeTab);
+
+  // FUNGSI PREVIEW DENGAN ANIMASI HACKING
+  const handlePreview = (cert) => {
+    setSelectedCert(cert);
+    setIsDecrypting(true);
+    // Fake loading delay biar berasa lagi decrypt data rahasia
+    setTimeout(() => {
+      setIsDecrypting(false);
+    }, 1200);
+  }
 
   return (
     <section id="certifications" className="py-24 relative w-full overflow-hidden bg-backgroundPrimary transition-colors duration-300">
@@ -123,18 +134,15 @@ export default function Certifications() {
                     </div>
                     
                     <div className="flex gap-2">
-                      {/* ELEGANT ANIMATED PREVIEW BUTTON */}
+                      {/* PREVIEW BUTTON */}
                       {cert.pdf && (
-                        <motion.button 
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => setSelectedCert(cert)}
-                          className="relative px-3 py-1.5 border border-border hover:border-cyan-400 bg-backgroundPrimary text-content2 hover:text-cyan-400 transition-colors flex items-center gap-1.5 overflow-hidden group/btn"
+                        <button 
+                          onClick={() => handlePreview(cert)}
+                          className="px-2.5 py-1.5 border border-border hover:border-primary bg-backgroundPrimary text-content2 hover:text-primary transition-colors flex items-center gap-1.5"
                         >
-                          <div className="absolute inset-0 bg-cyan-400/10 translate-y-[100%] group-hover/btn:translate-y-0 transition-transform duration-300 ease-out"></div>
-                          <Icon icon="lucide:scan-eye" className="w-3 h-3 relative z-10 group-hover/btn:animate-pulse" />
-                          <span style={pixelStyle} className="text-[5px] md:text-[6px] pt-0.5 relative z-10">PREVIEW</span>
-                        </motion.button>
+                          <Icon icon="lucide:scan-eye" className="w-3 h-3" />
+                          <span style={pixelStyle} className="text-[5px] md:text-[6px] pt-0.5">PREVIEW</span>
+                        </button>
                       )}
                     </div>
                   </div>
@@ -159,18 +167,15 @@ export default function Certifications() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
             className="fixed inset-0 z-[999999] flex items-center justify-center p-4 sm:p-6 md:p-12 bg-black/80 backdrop-blur-md"
             onClick={() => setSelectedCert(null)}
           >
             <motion.div
-              // ANIMASI CRT EXPAND MAUT: Ngebuka nyamping dulu, baru ke atas-bawah
-              initial={{ scaleY: 0.005, scaleX: 0, opacity: 0 }}
-              animate={{ scaleY: [0.005, 0.005, 1], scaleX: [0, 1, 1], opacity: [0, 1, 1] }}
-              exit={{ scaleY: [1, 0.005, 0.005], scaleX: [1, 1, 0], opacity: [1, 1, 0] }}
-              transition={{ duration: 0.5, times: [0, 0.4, 1], ease: "circOut" }}
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
               onClick={(e) => e.stopPropagation()} 
-              className="bg-[#050505] border border-cyan-500/30 w-full max-w-5xl h-[85vh] md:h-[90vh] flex flex-col shadow-[0_0_40px_rgba(34,211,238,0.15)] relative overflow-hidden origin-center"
+              className="bg-[#050505] border border-cyan-500/30 w-full max-w-5xl h-[85vh] md:h-[90vh] flex flex-col shadow-[0_0_40px_rgba(34,211,238,0.15)] relative overflow-hidden"
             >
               {/* ORNAMEN HUD CYBERPUNK DI POJOK MODAL */}
               <div className="absolute top-0 left-0 w-8 h-8 border-t-[3px] border-l-[3px] border-cyan-400 z-50 pointer-events-none opacity-70"></div>
@@ -194,28 +199,51 @@ export default function Certifications() {
                 </button>
               </div>
 
-              {/* Konten Viewer PDF Langsung Tanpa Basa-Basi */}
+              {/* Konten Viewer */}
               <div className="flex-grow bg-[#050505] p-3 md:p-6 relative z-10 flex items-center justify-center">
-                <object data={`${selectedCert.pdf}#view=FitH`} type="application/pdf" className="w-full h-full relative z-20">
-                  {/* TAMPILAN FALLBACK JIKA BROWSER HP NGE-BLOCK PDF */}
-                  <div className="flex flex-col items-center justify-center w-full h-full bg-[#0a0a0a] text-center p-6 md:p-12 border border-dashed border-cyan-500/20">
-                      <div className="relative mb-6">
-                        <Icon icon="lucide:shield-alert" className="w-12 h-12 md:w-16 md:h-16 text-cyan-400 opacity-80" />
-                        <Icon icon="lucide:scan-line" className="w-12 h-12 md:w-16 md:h-16 text-cyan-200 absolute inset-0 animate-[scan_2s_linear_infinite]" />
-                      </div>
-                      <p style={pixelStyle} className="text-[7px] md:text-[8px] text-cyan-400 mb-8 leading-loose opacity-80 max-w-md">
-                          [!] NATIVE_VIEWER_BLOCKED <br/><br/>
-                          Sistem keamanan mendeteksi limitasi render pada perangkat Anda (Auto-download dicegah).
-                      </p>
-                      <a href={selectedCert.pdf} target="_blank" rel="noreferrer" className="px-6 py-4 bg-cyan-950/30 border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-black transition-all flex items-center gap-3 hover:shadow-[0_0_15px_#22d3ee]">
-                          <Icon icon="lucide:external-link" className="w-5 h-5" />
-                          <span style={pixelStyle} className="text-[8px] tracking-widest pt-1">EKSTRAK DATA MANUAL</span>
-                      </a>
-                  </div>
-                </object>
                 
-                {/* Efek Garis Tepi Scanline Hologram di dalem Frame PDF */}
-                <div className="absolute inset-0 pointer-events-none border border-cyan-500/10 z-30 shadow-[inset_0_0_30px_rgba(34,211,238,0.05)] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%] opacity-20"></div>
+                {/* ANIMASI DECRYPTING SAKTI */}
+                {isDecrypting ? (
+                  <div className="flex flex-col items-center justify-center">
+                    <Icon icon="mdi:matrix" className="w-12 h-12 text-cyan-400 animate-spin mb-6" />
+                    <p style={pixelStyle} className="text-cyan-400 text-[8px] md:text-[10px] animate-pulse tracking-widest">
+                      DECRYPTING_DATA_BLOCKS...
+                    </p>
+                    <div className="w-48 md:w-64 h-1.5 bg-cyan-900/50 mt-6 relative overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }} 
+                        animate={{ width: "100%" }} 
+                        transition={{ duration: 1.1, ease: "circOut" }} 
+                        className="h-full bg-cyan-400 shadow-[0_0_10px_#22d3ee]"
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {/* OBJEK PDF DENGAN FALLBACK PINTAR UNTUK MOBILE */}
+                    <object data={`${selectedCert.pdf}#view=FitH`} type="application/pdf" className="w-full h-full relative z-20">
+                      
+                      {/* TAMPILAN FALLBACK JIKA BROWSER HP NGE-BLOCK PDF (Anti Auto-Download) */}
+                      <div className="flex flex-col items-center justify-center w-full h-full bg-[#0a0a0a] text-center p-6 md:p-12 border border-dashed border-cyan-500/20">
+                          <div className="relative mb-6">
+                            <Icon icon="lucide:shield-alert" className="w-12 h-12 md:w-16 md:h-16 text-cyan-400 opacity-80" />
+                            <Icon icon="lucide:scan-line" className="w-12 h-12 md:w-16 md:h-16 text-cyan-200 absolute inset-0 animate-[scan_2s_linear_infinite]" />
+                          </div>
+                          <p style={pixelStyle} className="text-[7px] md:text-[8px] text-cyan-400 mb-8 leading-loose opacity-80 max-w-md">
+                              [!] NATIVE_VIEWER_BLOCKED <br/><br/>
+                              Sistem keamanan mendeteksi limitasi render pada perangkat Anda (Auto-download dicegah).
+                          </p>
+                          <a href={selectedCert.pdf} target="_blank" rel="noreferrer" className="px-6 py-4 bg-cyan-950/30 border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-black transition-all flex items-center gap-3 hover:shadow-[0_0_15px_#22d3ee]">
+                              <Icon icon="lucide:external-link" className="w-5 h-5" />
+                              <span style={pixelStyle} className="text-[8px] tracking-widest pt-1">EKSTRAK DATA MANUAL</span>
+                          </a>
+                      </div>
+                    </object>
+                    
+                    {/* Efek Garis Tepi Scanline Hologram di dalem Frame PDF */}
+                    <div className="absolute inset-0 pointer-events-none border border-cyan-500/10 z-30 shadow-[inset_0_0_30px_rgba(34,211,238,0.05)] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%] opacity-20"></div>
+                  </>
+                )}
               </div>
             </motion.div>
           </motion.div>
