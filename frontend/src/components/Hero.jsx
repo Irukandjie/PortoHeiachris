@@ -55,7 +55,7 @@ export default function Hero() {
 
           <motion.div variants={itemVariants} className="flex flex-wrap gap-3 sm:gap-4 w-full sm:w-auto">
             <Link smooth to="/#experience" className="btn btn-primary rounded-md px-8 sm:px-12 font-semibold shadow-xl shadow-primary/30 transition-all hover:scale-105 flex-1 sm:flex-none text-center">Experience</Link>
-            <a href="https://github.com/Irukandjie" target="_blank" rel="noreferrer" className="btn btn-outline border-border rounded-md px-8 sm:px-12 font-semibold text-content1 hover:bg-white/5 transition-all hover:scale-105 flex-1 sm:flex-none text-center">My GitHub</a>
+  
           </motion.div>
         </motion.div>
 

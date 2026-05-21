@@ -8,12 +8,12 @@ export default function Exp() {
   
   const pixelStyle = { fontFamily: '"Press Start 2P", cursive' };
 
+  // Optimasi scroll progress
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start center", "end center"]
   })
 
-  // Hook ajaib buat nentuin posisi vertikal Pac-Man berdasarkan Scroll
   const pacmanY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   // Data Timeline
@@ -28,7 +28,6 @@ export default function Exp() {
     { id: "edu-2", title: "Sekolah Menengah Atas", place: "SMA 1 Toroh", date: "2018 - 2021", description: "Graduated with a focus on Natural Sciences (MIPA), building strong analytical, mathematical, and logical thinking foundations." }
   ]
 
-  // Data Projects
   const dataProjects = [
     { title: "Enterprise Network Architecture", client: "RS Sekar Laras", role: "Network Engineer", icon: "lucide:network", tech: ["Mikrotik", "Packet Filtering", "QoS", "Enterprise IT", "Network Security", "RB1100AHX4"], description: "Designed and deployed a high-availability network infrastructure featuring advanced packet filtering and enterprise-grade bandwidth management tailored for critical healthcare operations and data security." },
     { title: "SIMRS (Hospital Info System)", client: "RS Sekar Laras", role: "Product Manager", icon: "lucide:activity", tech: ["Product Strategy", "MERN Stack", "Agile", "EMR"], description: "Led the end-to-end product development lifecycle of an integrated EMR and hospital management system, bridging clinical workflows with robust technical solutions." },
@@ -37,7 +36,6 @@ export default function Exp() {
     { title: "Digital Wedding Platform (NIKAH DONG)", client: "MSIB Batch 5 - Gamelab", role: "UI/UX & PM", icon: "lucide:heart-handshake", tech: ["UI/UX Design", "Prototyping", "User Flow"], description: "Managed the product roadmap and designed elegant, highly responsive interfaces for a customizable and modern digital wedding invitation service." }
   ]
 
-  // Data Skills
   const hardSkills = [
     { name: "Network Engineering", desc: "Architecture & Config", icon: "flat-color-icons:data-configuration" },
     { name: "Mikrotik", desc: "Routing & Bandwidth", icon: "simple-icons:mikrotik", color: "text-content1" },
@@ -78,19 +76,21 @@ export default function Exp() {
 
   return (
     <section id="experience" className="py-24 relative w-full overflow-hidden transition-colors duration-300">
-      <div className="absolute inset-0 z-0 bg-backgroundPrimary"></div>
-      <div className="absolute inset-0 opacity-[0.05] pointer-events-none z-0" style={{ backgroundImage: 'radial-gradient(currentColor 0.5px, transparent 0.5px)', backgroundSize: '20px 20px' }}></div>
+      <div className="absolute inset-0 z-0 bg-backgroundPrimary transform-gpu"></div>
+      <div className="absolute inset-0 opacity-[0.05] pointer-events-none z-0 transform-gpu" style={{ backgroundImage: 'radial-gradient(currentColor 0.5px, transparent 0.5px)', backgroundSize: '20px 20px' }}></div>
       
       <div className="relative z-10 w-full max-w-[1200px] mx-auto px-6 md:px-12">
         
-        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, margin: "-100px" }} transition={{ duration: 0.5 }} className="text-center mb-12">
+        {/* OPTIMASI: once: true */}
+        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "50px" }} transition={{ duration: 0.5 }} className="text-center mb-12">
           <h2 style={pixelStyle} className="text-xl md:text-2xl mb-4 text-content1 flex items-center justify-center gap-4">
              <span className="w-3 h-3 bg-primary animate-pulse"></span> CAPABILITIES
           </h2>
           <p className="text-content3 text-sm md:text-base font-light">Perjalanan, karya, dan keahlian saya</p>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: false }} transition={{ duration: 0.4 }} className="flex flex-wrap justify-center gap-2 mb-16">
+        {/* OPTIMASI: once: true */}
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.4 }} className="flex flex-wrap justify-center gap-2 mb-16">
           {tabs.map((tab) => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`px-4 md:px-6 py-3 border-2 transition-all ${activeTab === tab.id ? 'border-primary bg-primary/10 text-primary shadow-[4px_4px_0_rgba(var(--color-primary),0.3)]' : 'border-border bg-backgroundSecondary text-content3 hover:border-content1 hover:-translate-y-1 hover:shadow-[4px_4px_0_rgba(var(--color-border),0.5)]'}`}>
               <span style={pixelStyle} className="text-[7px] md:text-[9px]">{tab.label}</span>
@@ -104,24 +104,23 @@ export default function Exp() {
             {(activeTab === 'pengalaman' || activeTab === 'pendidikan') && (
               <motion.div key="timeline" variants={containerVariants} initial="hidden" animate="visible" exit="exit" className="relative flex flex-col w-full">
                 
-                {/* 🎮 SUMBU TIMELINE PAC-MAN (NEON BLUE VERSION) 🎮 */}
                 <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-0 transform md:-translate-x-1/2 z-0">
                   <div className="absolute top-0 bottom-0 left-0 w-0.5 border-l-[4px] border-dotted border-border/60 -translate-x-[2px]" />
 
                   <motion.div
-                    className="absolute top-0 left-0 w-[4px] bg-primary origin-top -translate-x-[2px] shadow-[0_0_10px_rgba(var(--color-primary),0.8)]"
+                    className="absolute top-0 left-0 w-[4px] bg-primary origin-top -translate-x-[2px] shadow-[0_0_10px_rgba(var(--color-primary),0.8)] transform-gpu"
                     style={{ bottom: 0, scaleY: scrollYProgress }}
                   />
 
                   <motion.div
-                    className="absolute left-0 -translate-x-1/2 -mt-3 z-30 drop-shadow-[0_0_12px_rgba(34,211,238,0.9)]"
+                    className="absolute left-0 -translate-x-1/2 -mt-3 z-30 drop-shadow-[0_0_12px_rgba(34,211,238,0.9)] transform-gpu"
                     style={{ top: pacmanY }}
                   >
                     <div className="relative w-6 h-6 rotate-90">
                       <motion.div
                         animate={{ opacity: [1, 0, 1] }}
                         transition={{ repeat: Infinity, duration: 0.3, ease: "steps(1)" }}
-                        className="absolute inset-0 text-cyan-400 flex items-center justify-center"
+                        className="absolute inset-0 text-cyan-400 flex items-center justify-center transform-gpu"
                       >
                         <Icon icon="mdi:pac-man" className="w-full h-full" />
                       </motion.div>
@@ -129,7 +128,7 @@ export default function Exp() {
                       <motion.div
                         animate={{ opacity: [0, 1, 0] }}
                         transition={{ repeat: Infinity, duration: 0.3, ease: "steps(1)" }}
-                        className="absolute inset-0 flex items-center justify-center"
+                        className="absolute inset-0 flex items-center justify-center transform-gpu"
                       >
                         <div className="w-[18px] h-[18px] rounded-full bg-cyan-400" />
                       </motion.div>
@@ -140,13 +139,14 @@ export default function Exp() {
                 {(activeTab === 'pengalaman' ? dataPengalaman : dataPendidikan).map((item, index) => {
                   const isEven = index % 2 === 0
                   return (
-                    <motion.div key={item.id} initial="hidden" whileInView="visible" viewport={{ once: false, margin: "-100px" }} variants={itemVariants} className="relative flex flex-col md:flex-row justify-between items-start md:items-center w-full mb-10 md:mb-16 last:mb-0 group">
+                    // OPTIMASI: once: true
+                    <motion.div key={item.id} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "50px" }} variants={itemVariants} className="relative flex flex-col md:flex-row justify-between items-start md:items-center w-full mb-10 md:mb-16 last:mb-0 group">
                       <div className={`hidden md:block w-5/12 ${isEven ? 'order-1' : 'order-3'}`}></div>
                       
                       <motion.div 
                         initial={{ scale: 0 }} 
                         whileInView={{ scale: 1 }} 
-                        viewport={{ once: false, margin: "-100px" }} 
+                        viewport={{ once: true }} 
                         transition={{ delay: 0.2 }} 
                         className="absolute left-6 md:static md:left-auto md:order-2 w-4 h-4 rounded-full bg-white shadow-[0_0_8px_white] transform -translate-x-1/2 md:translate-x-0 mt-[1.3rem] md:mt-0 z-10 group-hover:scale-150 group-hover:bg-cyan-400 group-hover:shadow-[0_0_15px_#22d3ee] transition-all"
                       />
@@ -166,7 +166,7 @@ export default function Exp() {
             )}
 
             {activeTab === 'projects' && (
-              <motion.div key="projects" variants={containerVariants} initial="hidden" animate="visible" exit="exit" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+              <motion.div key="projects" variants={containerVariants} initial="hidden" animate="visible" exit="exit" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full transform-gpu">
                 {dataProjects.map((project, idx) => (
                   <motion.div key={idx} variants={itemVariants} className="border-2 border-border bg-backgroundSecondary p-6 flex flex-col h-full hover:border-purple-500 hover:shadow-[6px_6px_0_rgba(168,85,247,0.2)] transition-all duration-300 group hover:-translate-y-1">
                     <div className="flex justify-between items-start mb-6">
@@ -198,7 +198,7 @@ export default function Exp() {
             )}
 
             {activeTab === 'skills' && (
-              <motion.div key="skills" variants={containerVariants} initial="hidden" animate="visible" exit="exit" className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 w-full">
+              <motion.div key="skills" variants={containerVariants} initial="hidden" animate="visible" exit="exit" className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 w-full transform-gpu">
                 <div className="lg:col-span-7 xl:col-span-8">
                   <motion.h3 initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} style={pixelStyle} className="text-xs md:text-sm text-content1 mb-8 flex items-center gap-3 justify-center lg:justify-start">
                     <span className="text-primary"></span> HARD_SKILLS
@@ -235,26 +235,23 @@ export default function Exp() {
                             <span style={pixelStyle} className="text-[6px] md:text-[8px] text-primary">{skill.percentage}%</span>
                           </div>
                           
-                          {/* ============ SEGMENTED PIXEL PROGRESS BAR (ANTI BUG) ============ */}
                           <div className="w-full bg-[#0a0a0a] border-2 border-border h-5 md:h-6 p-1 flex gap-[2px] shadow-[0_0_10px_rgba(0,0,0,0.5)_inset]">
                             {[...Array(totalBlocks)].map((_, i) => (
                               <div key={i} className="h-full flex-1 bg-primary/10 relative">
                                 {i < filledBlocks && (
                                   <motion.div 
-                                    // Pake variants bawaan parent, BUKAN whileInView lagi!
                                     variants={{
                                       hidden: { opacity: 0 },
                                       visible: { 
                                         opacity: 1, 
                                         transition: { 
-                                          // Delay kalkulasi maut: waktu parent + urutan baris + urutan balok
                                           delay: 0.2 + (index * 0.1) + (i * 0.04), 
                                           duration: 0.01, 
                                           ease: "steps(1)" 
                                         } 
                                       }
                                     }}
-                                    className="absolute inset-0 bg-primary shadow-[0_0_8px] shadow-primary" 
+                                    className="absolute inset-0 bg-primary shadow-[0_0_8px] shadow-primary transform-gpu" 
                                   />
                                 )}
                               </div>
