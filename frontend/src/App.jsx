@@ -3,7 +3,7 @@ import { motion, useScroll, AnimatePresence } from "framer-motion";
 import LandingLayout from "./components/layouts/LandingLayouts"
 import Hero from "./components/Hero"
 import About from "./components/about"
-import Exp from "./components/Exp"
+import Exp from "./components/exp"
 import Certifications from "./components/Certificate"
 import Contact from "./components/contactme"
 import Preloader from "./components/preloader"
