@@ -3,11 +3,11 @@ import { HashLink as Link } from "react-router-hash-link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { TypeAnimation } from 'react-type-animation';
 import { Icon } from '@iconify/react';
-import ProfileImg from "../assets/image_15b552.jpeg"; // Updated with new image
-import Terminal from "./terminal"; // Import Terminal Modal
+import ProfileImg from "../assets/image_15b552.jpeg"; 
+import Terminal from "./terminal"; 
 
 export default function Hero() {
-  const [isTerminalOpen, setIsTerminalOpen] = useState(false); // State sakti buat buka tutup terminal
+  const [isTerminalOpen, setIsTerminalOpen] = useState(false); 
   const ref = useRef(null);
   const pixelStyle = { fontFamily: '"Press Start 2P", cursive' };
 
@@ -18,7 +18,9 @@ export default function Hero() {
 
   const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.1 } } };
   const itemVariants = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 15 } } };
-  const socialColumnVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { type: "spring", staggerChildren: 0.2, delay: 0.6 } } };
+  
+  // Optimasi: Social links dibikin lebih cepet
+  const socialColumnVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { type: "spring", staggerChildren: 0.1, delay: 0.2 } } };
   const socialItemVariants = { hidden: { opacity: 0, scale: 0.5 }, visible: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 150, damping: 12 } } };
 
   const socialLinks = [
@@ -28,10 +30,12 @@ export default function Hero() {
 
   return (
     <section id="home" ref={ref} className="relative min-h-screen flex items-center justify-center w-full pt-28 pb-16 overflow-hidden bg-backgroundPrimary">
-      <div className="absolute inset-0 z-0 opacity-[0.03] grid-bg"></div>
+      <div className="absolute inset-0 z-0 opacity-[0.03] grid-bg transform-gpu"></div>
 
-      <motion.div variants={containerVariants} initial="hidden" animate="visible" className="relative z-10 w-full max-w-[1200px] mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-[1.3fr,1fr] gap-16 md:gap-20 items-center">
-        <motion.div className="text-left flex flex-col items-start" style={{ y: textY, opacity }}>
+      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-[1.3fr,1fr] gap-16 md:gap-20 items-center">
+        
+        {/* TEXT COLUMN */}
+        <motion.div variants={containerVariants} initial="hidden" animate="visible" className="text-left flex flex-col items-start" style={{ y: textY, opacity }}>
           <motion.div variants={itemVariants} className="mb-8">
             <div style={pixelStyle} className="badge badge-outline border-border/60 text-cyan-400 px-5 py-3 text-[7px] sm:text-[8px] rounded-sm bg-cyan-500/5 shadow-[0_0_15px_rgba(34,211,238,0.1)] backdrop-blur-sm tracking-widest uppercase">
               NETWORKING • IT SUPPORT • DEV
@@ -59,7 +63,6 @@ export default function Hero() {
               Experience
             </Link>
             
-            {/* ============ TOMBOL TERMINAL BARU ============ */}
             <button 
               onClick={() => setIsTerminalOpen(true)} 
               className="btn btn-outline border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-black rounded-md px-8 sm:px-12 font-semibold shadow-xl shadow-cyan-400/20 transition-all hover:scale-105 flex-1 sm:flex-none flex items-center justify-center gap-2"
@@ -67,34 +70,51 @@ export default function Hero() {
               <Icon icon="lucide:terminal-square" className="w-5 h-5" />
               Terminal
             </button>
-
           </motion.div>
         </motion.div>
 
-        {/* IMAGE SECTION */}
-        <motion.div variants={itemVariants} style={{ y: imageY, opacity }} className="relative flex flex-col justify-center items-center mt-10 md:mt-0">
-          <div className="absolute w-[120%] h-[120%] bg-gradient-to-r from-blue-500/10 via-cyan-400/10 to-teal-400/10 blur-[100px] rounded-full z-0"></div>
+        {/* IMAGE SECTION (OPTIMIZED LCP) */}
+        {/* Pisahin animasi dari containerVariants biar ngerender duluan tanpa delay JS! */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          style={{ y: imageY }} 
+          className="relative flex flex-col justify-center items-center mt-10 md:mt-0 transform-gpu"
+        >
+          <div className="absolute w-[120%] h-[120%] bg-gradient-to-r from-blue-500/10 via-cyan-400/10 to-teal-400/10 blur-[100px] rounded-full z-0 pointer-events-none"></div>
           <div className="relative z-10 w-[85%] sm:w-[70%] md:w-full max-w-[420px] aspect-square rounded-[20px] border-2 border-border/50 shadow-2xl rotate-[-2deg] bg-backgroundSecondary p-3 mx-auto md:mx-0 transition-transform duration-500 hover:rotate-0 hover:border-cyan-400/30">
-            <img src={ProfileImg} alt="Alden Christian T.W Profile" className="w-full h-full object-cover rounded-[12px] filter grayscale hover:grayscale-0 transition-all duration-700" />
+            
+            {/* INI KUNCI UTAMA PAGE SPEED (fetchPriority, eager, decoding, width, height) */}
+            <img 
+              src={ProfileImg} 
+              alt="Alden Christian T.W Profile" 
+              width="420"
+              height="420"
+              fetchPriority="high"
+              loading="eager"
+              decoding="async"
+              className="w-full h-full object-cover rounded-[12px] filter grayscale hover:grayscale-0 transition-all duration-700 transform-gpu" 
+            />
+            
           </div>
 
-          <motion.div variants={socialColumnVariants} className="flex flex-row gap-5 mt-[-20px] sm:mt-[-25px] md:mt-[-30px] relative z-20">
+          <motion.div variants={socialColumnVariants} initial="hidden" animate="visible" className="flex flex-row gap-5 mt-[-20px] sm:mt-[-25px] md:mt-[-30px] relative z-20">
             {socialLinks.map((social, idx) => (
               <motion.div key={idx} variants={socialItemVariants} className="group relative">
                 <span style={pixelStyle} className="absolute left-1/2 bottom-full transform -translate-x-1/2 mb-3 bg-backgroundSecondary border border-border text-[8px] text-content1 px-4 py-2 rounded-sm opacity-0 group-hover:opacity-100 group-hover:-translate-y-2 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-xl z-30">
                   {social.label}
                 </span>
                 <a href={social.link} target="_blank" rel="noreferrer" className="relative btn btn-outline btn-circle w-12 h-12 md:w-14 md:h-14 border-border/60 bg-backgroundSecondary/80 backdrop-blur-sm shadow-xl flex items-center justify-center transition-all duration-500 group-hover:border-cyan-400/40 group-hover:scale-110 group-hover:rotate-[360deg]" style={{ '--hover-glow': social.glowColor }}>
-                  <div className="absolute inset-1 rounded-full opacity-0 group-hover:opacity-100 blur-[12px] transition-opacity duration-300" style={{ background: social.glowColor }}></div>
+                  <div className="absolute inset-1 rounded-full opacity-0 group-hover:opacity-100 blur-[12px] transition-opacity duration-300 pointer-events-none" style={{ background: social.glowColor }}></div>
                   <Icon icon={social.icon} className={`relative z-10 w-6 h-6 md:w-7 md:h-7 text-content2 transition-colors ${social.color}`} />
                 </a>
               </motion.div>
             ))}
           </motion.div>
         </motion.div>
-      </motion.div>
+      </div>
 
-      {/* ============ RENDER MODAL TERMINAL DI BAWAH SINI ============ */}
       <Terminal isOpen={isTerminalOpen} onClose={() => setIsTerminalOpen(false)} />
     </section>
   );
