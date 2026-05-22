@@ -1,13 +1,15 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { HashLink as Link } from "react-router-hash-link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { TypeAnimation } from 'react-type-animation';
 import { Icon } from '@iconify/react';
 import ProfileImg from "../assets/image_15b552.jpeg"; // Updated with new image
+import Terminal from "./terminal"; // Import Terminal Modal
 
 export default function Hero() {
+  const [isTerminalOpen, setIsTerminalOpen] = useState(false); // State sakti buat buka tutup terminal
   const ref = useRef(null);
-  const pixelStyle = { fontFamily: '"Press Start 2P", cursive' }; // Gaya Piksel Global Komponen
+  const pixelStyle = { fontFamily: '"Press Start 2P", cursive' };
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
@@ -31,7 +33,6 @@ export default function Hero() {
       <motion.div variants={containerVariants} initial="hidden" animate="visible" className="relative z-10 w-full max-w-[1200px] mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-[1.3fr,1fr] gap-16 md:gap-20 items-center">
         <motion.div className="text-left flex flex-col items-start" style={{ y: textY, opacity }}>
           <motion.div variants={itemVariants} className="mb-8">
-            {/* SENTUHAN PIKSEL PADA BADGE HERO */}
             <div style={pixelStyle} className="badge badge-outline border-border/60 text-cyan-400 px-5 py-3 text-[7px] sm:text-[8px] rounded-sm bg-cyan-500/5 shadow-[0_0_15px_rgba(34,211,238,0.1)] backdrop-blur-sm tracking-widest uppercase">
               NETWORKING • IT SUPPORT • DEV
             </div>
@@ -54,8 +55,19 @@ export default function Hero() {
           </motion.div>
 
           <motion.div variants={itemVariants} className="flex flex-wrap gap-3 sm:gap-4 w-full sm:w-auto">
-            <Link smooth to="/#experience" className="btn btn-primary rounded-md px-8 sm:px-12 font-semibold shadow-xl shadow-primary/30 transition-all hover:scale-105 flex-1 sm:flex-none text-center">Experience</Link>
-  
+            <Link smooth to="/#experience" className="btn btn-primary rounded-md px-8 sm:px-12 font-semibold shadow-xl shadow-primary/30 transition-all hover:scale-105 flex-1 sm:flex-none text-center">
+              Experience
+            </Link>
+            
+            {/* ============ TOMBOL TERMINAL BARU ============ */}
+            <button 
+              onClick={() => setIsTerminalOpen(true)} 
+              className="btn btn-outline border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-black rounded-md px-8 sm:px-12 font-semibold shadow-xl shadow-cyan-400/20 transition-all hover:scale-105 flex-1 sm:flex-none flex items-center justify-center gap-2"
+            >
+              <Icon icon="lucide:terminal-square" className="w-5 h-5" />
+              Terminal
+            </button>
+
           </motion.div>
         </motion.div>
 
@@ -81,6 +93,9 @@ export default function Hero() {
           </motion.div>
         </motion.div>
       </motion.div>
+
+      {/* ============ RENDER MODAL TERMINAL DI BAWAH SINI ============ */}
+      <Terminal isOpen={isTerminalOpen} onClose={() => setIsTerminalOpen(false)} />
     </section>
   );
 }
