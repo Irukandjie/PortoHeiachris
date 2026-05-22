@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, useScroll, AnimatePresence } from "framer-motion";
 import LandingLayout from "./components/layouts/LandingLayouts"
 import Hero from "./components/Hero"
-import TechTicker from "./components/TechTicker" 
+import TechTicker from "./components/techticker" 
 import About from "./components/About"
 import Exp from "./components/Exp"
 import Certifications from "./components/Certificate"
